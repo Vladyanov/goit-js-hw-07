@@ -52,7 +52,7 @@ function modalCreate() {
 
 function closeModalEscBtn(modal) {
     if (basicLightbox.visible()) {
-        window.addEventListener('keypress', e => {
+        document.addEventListener('keypress', e => {
             if (e.code === 'Escape') {
             modal.close();
         }
