@@ -35,8 +35,6 @@ function handleClick(e) {
         return;
     }
 
-    const originalImageRef = e.target.dataset.source;
-
     const instance = basicLightbox.create(`
 		<img width="1400" height="900" src="${e.target.dataset.source}">
 	`).show(); 
