@@ -6,7 +6,6 @@ const galleryContainer = document.querySelector('.gallery');
 galleryItemsAdd();
 modalCreate();
 
-
 function galleryItemsCreate(gallery) {
     return gallery.map(({ preview, original, description }) => 
         `
@@ -35,29 +34,33 @@ function handleClick(e) {
         return;
     }
 
+    function closeModal(e) {
+      if (e.code === 'Escape') {
+        instance.close();
+      }
+    };
+    
     const instance = basicLightbox.create(`
-		<img width="1400" height="900" src="${e.target.dataset.source}">
-	`).show(); 
+		<img width="1400" height="900" src="${getOriginalImg(e)}">`,
+        {        
+            onShow: instance => {
+                window.addEventListener('keydown', closeModal);
+            },
 
-    closeModalEscBtn(instance);
+            onClose: instance => {
+                window.removeEventListener('keydown', closeModal);
+            },
+        }
+    );
+    instance.show();
 }
+
+function getOriginalImg(e) {
+    return e.target.dataset.source; 
+}
+
 
 function modalCreate() {
     galleryContainer.addEventListener('click', handleClick);
 }
-
-// закрытие модалки по ESC
-
-function closeModalEscBtn(modal) {
-    if (basicLightbox.visible()) {
-        document.addEventListener('keypress', e => {
-            if (e.code === 'Escape') {
-            modal.close();
-        }
-    }); 
-    }
-}
-
-
-
 
