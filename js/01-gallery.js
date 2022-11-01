@@ -3,11 +3,10 @@ import { galleryItems } from './gallery-items.js';
 
 const galleryContainer = document.querySelector('.gallery');
 
-galleryItemsAdd();
-modalCreate();
-
-function galleryItemsCreate(gallery) {
-    return gallery.map(({ preview, original, description }) => 
+const galleryItemsCreate = gallery => {
+  return gallery
+    .map(
+      ({ preview, original, description }) =>
         `
         <div class="gallery__item">
           <a class="gallery__link" href="${original}">
@@ -21,46 +20,45 @@ function galleryItemsCreate(gallery) {
           </a>
         </div>
         `
-    ).join('');
-}
+    )
+    .join('');
+};
 
-function galleryItemsAdd() {
-    galleryContainer.innerHTML = galleryItemsCreate(galleryItems);
-} 
+const galleryItemsAdd = () => {
+  galleryContainer.innerHTML = galleryItemsCreate(galleryItems);
+};
 
-function handleClick(e) {
-    e.preventDefault();
-    if (e.target.nodeName !== "IMG") {
-        return;
+const handleClick = e => {
+  e.preventDefault();
+  if (e.target.nodeName !== 'IMG') {
+    return;
+  }
+
+  const closeModal = e => {
+    if (e.code === 'Escape') {
+      instance.close();
     }
+  };
 
-    function closeModal(e) {
-      if (e.code === 'Escape') {
-        instance.close();
-      }
-    };
-    
-    const instance = basicLightbox.create(`
-		<img width="1400" height="900" src="${getOriginalImg(e)}">`,
-        {        
-            onShow: instance => {
-                window.addEventListener('keydown', closeModal);
-            },
+  const instance = basicLightbox.create(
+    `
+		<img width="1400" height="900" src="${e.target.dataset.source}">`,
+    {
+      onShow: instance => {
+        window.addEventListener('keydown', closeModal);
+      },
 
-            onClose: instance => {
-                window.removeEventListener('keydown', closeModal);
-            },
-        }
-    );
-    instance.show();
-}
+      onClose: instance => {
+        window.removeEventListener('keydown', closeModal);
+      },
+    }
+  );
+  instance.show();
+};
 
-function getOriginalImg(e) {
-    return e.target.dataset.source; 
-}
+const modalCreate = () => {
+  galleryContainer.addEventListener('click', handleClick);
+};
 
-
-function modalCreate() {
-    galleryContainer.addEventListener('click', handleClick);
-}
-
+galleryItemsAdd();
+modalCreate();
